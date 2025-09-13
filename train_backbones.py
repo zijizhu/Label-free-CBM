@@ -124,7 +124,7 @@ def main():
     parser.add_argument("--data-dir", type=str, default="datasets")
     parser.add_argument("--log-dir", type=str, default="logs")
     parser.add_argument("--lr", type=float, default=1e-4)
-    parser.add_argument("--epochs", type=int, default=20)
+    parser.add_argument("--epochs", type=int, default=5)
     parser.add_argument("--seed", type=int, default=42)
 
     args = parser.parse_args()
@@ -181,6 +181,8 @@ def main():
     optimizer = optim.Adam(model.parameters(), lr=args.lr)
     criterion = nn.CrossEntropyLoss()
 
+    lr_scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.2)
+
     best_val_acc = 0.0
 
     logger.info("Starting training...")
@@ -200,6 +202,8 @@ def main():
             torch.save(model.state_dict(),f"checkpoints/{args.backbone}_cub.pth")
             logger.info("Model saved as model_best.pth")
             best_val_acc = val_acc
+        
+        lr_scheduler.step()
 
 
 if __name__ == "__main__":
