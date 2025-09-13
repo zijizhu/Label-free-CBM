@@ -190,6 +190,11 @@ def main():
         train_loss, train_acc = train(model, train_loader, criterion, optimizer, device)
         val_loss, val_acc = validate(model, test_loader, criterion, device)
 
+        logger.info(f"training loss: {train_loss:.4f}")
+        logger.info(f"training acc: {train_acc:.4f}")
+        logger.info(f"validation loss: {val_loss:.4f}")
+        logger.info(f"validation acc: {val_acc:.4f}")
+
         # Checkpointing
         if val_acc > best_val_acc:
             torch.save(model.state_dict(),f"checkpoints/{args.backbone}_cub.pth")
