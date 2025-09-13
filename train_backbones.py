@@ -36,10 +36,20 @@ class CNNClassifier(nn.Module):
         assert name in ["densenet161", "densenet121", "resnet34", "resnet18", "resnet50", "vgg19"]
         if name == "densenet161":
             backbone = densenet161(weights=DenseNet161_Weights.DEFAULT)
-            return backbone.features, backbone.classifier.in_features
+            return nn.Sequential(
+                backbone.features,
+                nn.ReLU(inplace=True),
+                nn.AdaptiveAvgPool2d((1, 1)),
+                nn.Flatten(start_dim=1)
+            ), backbone.classifier.in_features
         elif name == "densenet121":
             backbone = densenet121(weights=DenseNet121_Weights.DEFAULT)
-            return backbone.features, backbone.classifier.in_features
+            return nn.Sequential(
+                backbone.features,
+                nn.ReLU(inplace=True),
+                nn.AdaptiveAvgPool2d((1, 1)),
+                nn.Flatten(start_dim=1)
+            ), backbone.classifier.in_features
         elif name == "resnet18":
             backbone = resnet18(weights=ResNet18_Weights.DEFAULT)
             return nn.Sequential(*list(backbone.children())[:-1]), backbone.fc.in_features
@@ -51,7 +61,11 @@ class CNNClassifier(nn.Module):
             return nn.Sequential(*list(backbone.children())[:-1]), backbone.fc.in_features
         elif name == "vgg19":
             backbone = vgg19(weights=VGG19_Weights.DEFAULT)
-            return nn.Sequential(*list(backbone.children())[:-1]), backbone.classifier[0].in_features
+            return nn.Sequential(
+                backbone.features,
+                nn.AdaptiveAvgPool2d((1, 1)),
+                nn.Flatten(start_dim=1)
+            ), backbone.classifier[0].in_features
 
     def forward(self, x):
         features = self.features(x)

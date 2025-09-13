@@ -1,8 +1,9 @@
 import os
 import torch
-from torchvision import datasets, transforms, models
-
+from torchvision import datasets, transforms
+from train_backbones import CNNClassifier
 import clip
+import torchvision.transforms as T
 
 DATASET_ROOTS = {
     "imagenet_train": "YOUR_PATH/CLS-LOC/train/",
@@ -71,8 +72,17 @@ def get_targets_only(dataset_name):
     return pil_data.targets
 
 def get_target_model(target_name, device):
-    
-    if target_name.startswith("clip_"):
+    if target_name in ["densenet161", "densenet121", "resnet34", "resnet18", "resnet50", "vgg19"]:
+        target_model = CNNClassifier(target_name)
+        target_model.load_state_dict(f"checkpoints/{target_name}_cub")
+        target_model.eval()
+        preprocess = T.Compose([
+            T.Resize((224, 224)),
+            T.ToTensor(),
+            T.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
+        ])
+
+    elif target_name.startswith("clip_"):
         target_name = target_name[5:]
         model, preprocess = clip.load(target_name, device=device)
         target_model = lambda x: model.encode_image(x).float()

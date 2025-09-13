@@ -6,7 +6,7 @@ export dataset_root=/workspace/datasets/cub200_cropped
 python train_cbm.py \
     --dataset cub \
     --backbone $backbone \
-    --feature_layer features.final_pool \
+    --feature_layer features \
     --lam 0.0002 \
     --concept_set "data/concept_sets/cub_filtered_v2.txt" \
     --n_iters 20 \
