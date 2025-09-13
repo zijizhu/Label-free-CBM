@@ -73,8 +73,8 @@ def get_targets_only(dataset_name):
 
 def get_target_model(target_name, device):
     if target_name in ["densenet161", "densenet121", "resnet34", "resnet18", "resnet50", "vgg19"]:
-        target_model = CNNClassifier(target_name)
-        target_model.load_state_dict(f"checkpoints/{target_name}_cub")
+        target_model = CNNClassifier(target_name).to(device)
+        target_model.load_state_dict(torch.load(f"checkpoints/{target_name}_cub", map_location=device))
         target_model.eval()
         preprocess = T.Compose([
             T.Resize((224, 224)),
