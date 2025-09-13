@@ -88,15 +88,14 @@ def train_cbm_and_save(args):
 
         del image_features, text_features, val_image_features
     
-    '''NOTE: Concept editing is removed'''
-    #filter concepts not activating highly
-    # highest = torch.mean(torch.topk(clip_features, dim=0, k=5)[0], dim=0)
+    # filter concepts not activating highly
+    highest = torch.mean(torch.topk(clip_features, dim=0, k=5)[0], dim=0)
     
-    # if args.print:
-    #     for i, concept in enumerate(concepts):
-    #         if highest[i]<=args.clip_cutoff:
-    #             print("Deleting {}, CLIP top5:{:.3f}".format(concept, highest[i]))
-    # concepts = [concepts[i] for i in range(len(concepts)) if highest[i]>args.clip_cutoff]
+    if args.print:
+        for i, concept in enumerate(concepts):
+            if highest[i]<=args.clip_cutoff:
+                print("Deleting {}, CLIP top5:{:.3f}".format(concept, highest[i]))
+    concepts = [concepts[i] for i in range(len(concepts)) if highest[i]>args.clip_cutoff]
     
     #save memory by recalculating
     del clip_features
@@ -154,19 +153,18 @@ def train_cbm_and_save(args):
     proj_layer.load_state_dict({"weight":best_weights})
     print("Best step:{}, Avg val similarity:{:.4f}".format(best_step, -best_val_loss.cpu()))
     
-    '''NOTE: Concept editing is removed'''
     #delete concepts that are not interpretable
-    # with torch.no_grad():
-    #     outs = proj_layer(val_target_features.to(args.device).detach())
-    #     sim = similarity_fn(val_clip_features.to(args.device).detach(), outs)
-    #     interpretable = sim > args.interpretability_cutoff
+    with torch.no_grad():
+        outs = proj_layer(val_target_features.to(args.device).detach())
+        sim = similarity_fn(val_clip_features.to(args.device).detach(), outs)
+        interpretable = sim > args.interpretability_cutoff
         
-    # if args.print:
-    #     for i, concept in enumerate(concepts):
-    #         if sim[i]<=args.interpretability_cutoff:
-    #             print("Deleting {}, Iterpretability:{:.3f}".format(concept, sim[i]))
+    if args.print:
+        for i, concept in enumerate(concepts):
+            if sim[i]<=args.interpretability_cutoff:
+                print("Deleting {}, Iterpretability:{:.3f}".format(concept, sim[i]))
     
-    # concepts = [concepts[i] for i in range(len(concepts)) if interpretable[i]]
+    concepts = [concepts[i] for i in range(len(concepts)) if interpretable[i]]
     
     del clip_features, val_clip_features
     
