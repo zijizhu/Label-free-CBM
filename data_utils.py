@@ -9,7 +9,7 @@ DATASET_ROOTS = {
     "imagenet_train": "YOUR_PATH/CLS-LOC/train/",
     "imagenet_val": "YOUR_PATH/ImageNet_val/",
     "cub_train": os.path.join(os.getenv("dataset_root"), "train_cropped_augmented"),
-    "cub_val": os.path.join(os.getenv("dataset_root"), "test_augmented")
+    "cub_val": os.path.join(os.getenv("dataset_root"), "test_cropped")
 }
 
 LABEL_FILES = {"places365":"data/categories_places365_clean.txt",
