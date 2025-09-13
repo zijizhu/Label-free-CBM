@@ -42,13 +42,13 @@ class CNNClassifier(nn.Module):
             return backbone.features, backbone.classifier.in_features
         elif name == "resnet18":
             backbone = resnet18(weights=ResNet18_Weights.DEFAULT)
-            return nn.Sequential(*list(backbone.children())[:-2]), backbone.fc.in_features
+            return nn.Sequential(*list(backbone.children())[:-1]), backbone.fc.in_features
         elif name == "resnet34":
             backbone = resnet34(weights=ResNet34_Weights.DEFAULT)
-            return nn.Sequential(*list(backbone.children())[:-2]), backbone.fc.in_features
+            return nn.Sequential(*list(backbone.children())[:-1]), backbone.fc.in_features
         elif name == "resnet50":
             backbone = resnet50(weights=ResNet50_Weights.DEFAULT)
-            return nn.Sequential(*list(backbone.children())[:-2]), backbone.fc.in_features
+            return nn.Sequential(*list(backbone.children())[:-1]), backbone.fc.in_features
         elif name == "vgg19":
             backbone = vgg19(weights=VGG19_Weights.DEFAULT)
             return nn.Sequential(*list(backbone.children())[:-1]), backbone.classifier[0].in_features
