@@ -3,7 +3,6 @@
 allbackbones=(
     "densenet121"
     "densenet161"
-    "resnet50"
     "vgg19"
 )
 

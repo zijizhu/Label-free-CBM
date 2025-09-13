@@ -1,13 +1,34 @@
 #!/bin/bash
 
-backbone=resnet34
 export dataset_root=/workspace/datasets/cub200_cropped
 
-python train_cbm.py \
-    --dataset cub \
-    --backbone $backbone \
-    --feature_layer features \
-    --lam 0.0002 \
-    --concept_set "data/concept_sets/cub_filtered_v2.txt" \
-    --n_iters 20 \
-    --proj_steps 1
+allbackbones=(
+    "densenet121"
+    "densenet161"
+    "vgg19"
+)
+
+for backbone in ${allbackbones[@]}; do
+  python train_backbones.py --backbone $backbone --name $backbone --data-dir $dataset_root
+done
+
+allbackbones=(
+    "resnet34"
+    "resnet18"
+    "resnet50"
+    "densenet121"
+    "densenet161"
+    "vgg19"
+)
+
+for backbone in ${allbackbones[@]}; do
+    python train_cbm.py \
+        --dataset cub \
+        --backbone $backbone \
+        --feature_layer features \
+        --lam 0.0002 \
+        --concept_set "data/concept_sets/cub_filtered_v2.txt" \
+        --n_iters 50 \
+        --proj_steps 1
+done
+
