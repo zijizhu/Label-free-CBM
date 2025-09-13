@@ -85,6 +85,12 @@ def get_target_model(target_name, device):
         target_model = eval("models.{}(weights).to(device)".format(target_name))
         target_model.eval()
         preprocess = weights.transforms()
+    
+    elif target_name == "resnet18_cub":
+        from pytorchcv.model_provider import get_model as ptcv_get_model
+        target_model = ptcv_get_model("resnet18_cub", pretrained=True).to(device)
+        target_model.eval()
+        preprocess = get_resnet_imagenet_preprocess()
         
     else:
         target_name_cap = target_name.replace("resnet", "ResNet")

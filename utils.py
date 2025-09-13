@@ -25,10 +25,14 @@ def save_target_activations(target_model, dataset, save_name, target_layers = ["
     all_features = {target_layer:[] for target_layer in target_layers}
     
     hooks = {}
+    '''TODO: remove this'''
+    # for target_layer in target_layers:
+    #     command = "target_model.{}.register_forward_hook(get_activation(all_features[target_layer], pool_mode))".format(target_layer)
+    #     hooks[target_layer] = eval(command)
     for target_layer in target_layers:
-        command = "target_model.{}.register_forward_hook(get_activation(all_features[target_layer], pool_mode))".format(target_layer)
-        hooks[target_layer] = eval(command)
-    
+        layer = getattr(target_model, target_layer)
+        hooks[target_layer] = layer.register_forward_hook(get_activation(all_features[target_layer], pool_mode))
+  
     with torch.no_grad():
         for images, labels in tqdm(DataLoader(dataset, batch_size, num_workers=8, pin_memory=True)):
             features = target_model(images.to(device))

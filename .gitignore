@@ -8,3 +8,5 @@ data/imagenet_val
 data/ImageNet_val
 data/places365.zip
 saved_models/
+.venv/
+venv/
