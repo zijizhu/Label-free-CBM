@@ -120,12 +120,12 @@ def main():
         default="densenet161",
         choices=["densenet161", "densenet121", "resnet34", "resnet18", "resnet50", "vgg19"]
     )
-    parser.add_argument("--batch-size", type=int, default=80)
+    parser.add_argument("--batch-size", type=int, default=128)
     parser.add_argument("--data-dir", type=str, default="datasets")
     parser.add_argument("--log-dir", type=str, default="logs")
     parser.add_argument("--lr", type=float, default=1e-4)
-    parser.add_argument("--epochs", type=int, default=30)
-    parser.add_argument("--seed", type=int, default=43)
+    parser.add_argument("--epochs", type=int, default=20)
+    parser.add_argument("--seed", type=int, default=42)
 
     args = parser.parse_args()
 
@@ -159,11 +159,11 @@ def main():
 
     # Datasets
     train_dataset = ImageFolder(
-        root=Path("cub200_cropped") / "train_cropped_augmented",
+        root=Path(args.data_dir) / "train_cropped_augmented",
         transform=transforms
     )
     test_dataset = ImageFolder(
-        root=Path("cub200_cropped") / "test_cropped",
+        root=Path(args.data_dir) / "test_cropped",
         transform=transforms
     )
 
