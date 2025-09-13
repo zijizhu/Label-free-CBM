@@ -1,16 +1,11 @@
 #!/bin/bash
 
 allbackbones=(
-    "resnet34"
-    "resnet18"
+    "densenet121"
+    "densenet161"
     "resnet50"
     "vgg19"
 )
-
-# allbackbones=(
-#     "densenet161"
-#     "densenet121"
-# )
 
 for backbone in ${allbackbones[@]}; do
   python train_backbones.py --backbone $backbone --name $backbone --data-dir /workspace/datasets/cub200_cropped/
