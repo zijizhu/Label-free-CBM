@@ -1,0 +1,12 @@
+#!/bin/bash
+
+backbone=resnet34
+export dataset_root=/workspace/datasets/cub200_cropped
+
+python train_standard.py \
+    --dataset cub \
+    --backbone $backbone \
+    --feature_layer features.final_pool \
+    --lam 0.00002 \
+    --concept_set data/concept_sets/cub_filtered_v2.txt \
+    --n_iters 5000

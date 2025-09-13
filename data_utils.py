@@ -3,13 +3,13 @@ import torch
 from torchvision import datasets, transforms, models
 
 import clip
-from pytorchcv.model_provider import get_model as ptcv_get_model
+import os
 
 DATASET_ROOTS = {
     "imagenet_train": "YOUR_PATH/CLS-LOC/train/",
     "imagenet_val": "YOUR_PATH/ImageNet_val/",
-    "cub_train":"data/CUB/train",
-    "cub_val":"data/CUB/test"
+    "cub_train": os.path.join(os.getenv("dataset_root"), "train_cropped_augmented"),
+    "cub_val": os.path.join(os.getenv("dataset_root"), "test_augmented")
 }
 
 LABEL_FILES = {"places365":"data/categories_places365_clean.txt",
@@ -77,22 +77,6 @@ def get_target_model(target_name, device):
         target_name = target_name[5:]
         model, preprocess = clip.load(target_name, device=device)
         target_model = lambda x: model.encode_image(x).float()
-    
-    elif target_name == 'resnet18_places': 
-        target_model = models.resnet18(pretrained=False, num_classes=365).to(device)
-        state_dict = torch.load('data/resnet18_places365.pth.tar')['state_dict']
-        new_state_dict = {}
-        for key in state_dict:
-            if key.startswith('module.'):
-                new_state_dict[key[7:]] = state_dict[key]
-        target_model.load_state_dict(new_state_dict)
-        target_model.eval()
-        preprocess = get_resnet_imagenet_preprocess()
-        
-    elif target_name == 'resnet18_cub':
-        target_model = ptcv_get_model("resnet18_cub", pretrained=True).to(device)
-        target_model.eval()
-        preprocess = get_resnet_imagenet_preprocess()
     
     elif target_name.endswith("_v2"):
         target_name = target_name[:-3]

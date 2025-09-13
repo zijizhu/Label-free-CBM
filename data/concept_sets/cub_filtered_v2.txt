@@ -1,0 +1,112 @@
+bill shape dagger
+bill shape hooked seabird
+bill shape all-purpose
+bill shape cone
+wing color brown
+wing color grey
+wing color yellow
+wing color black
+wing color white
+wing color buff
+upperparts color brown
+upperparts color grey
+upperparts color yellow
+upperparts color black
+upperparts color white
+upperparts color buff
+underparts color brown
+underparts color grey
+underparts color yellow
+underparts color black
+underparts color white
+underparts color buff
+breast pattern solid
+breast pattern striped
+breast pattern multi-colored
+back color brown
+back color grey
+back color yellow
+back color black
+back color white
+back color buff
+tail shape notched tail
+upper tail color brown
+upper tail color grey
+upper tail color black
+upper tail color white
+upper tail color buff
+head pattern eyebrow
+head pattern plain
+breast color brown
+breast color grey
+breast color yellow
+breast color black
+breast color white
+breast color buff
+throat color grey
+throat color yellow
+throat color black
+throat color white
+throat color buff
+eye color black
+bill length about the same as head
+bill length shorter than head
+forehead color blue
+forehead color brown
+forehead color grey
+forehead color yellow
+forehead color black
+forehead color white
+under tail color brown
+under tail color grey
+under tail color black
+under tail color white
+under tail color buff
+nape color brown
+nape color grey
+nape color yellow
+nape color black
+nape color white
+nape color buff
+belly color brown
+belly color grey
+belly color yellow
+belly color black
+belly color white
+belly color buff
+wing shape rounded-wings
+wing shape pointed-wings
+size small (5 - 9 in)
+size medium (9 - 16 in)
+size very small (3 - 5 in)
+shape duck-like
+shape perching-like
+back pattern solid
+back pattern striped
+back pattern multi-colored
+tail pattern solid
+tail pattern striped
+tail pattern multi-colored
+belly pattern solid
+primary color brown
+primary color grey
+primary color yellow
+primary color black
+primary color white
+primary color buff
+leg color grey
+leg color black
+leg color buff
+bill color grey
+bill color black
+bill color buff
+crown color blue
+crown color brown
+crown color grey
+crown color yellow
+crown color black
+crown color white
+wing pattern solid
+wing pattern spotted
+wing pattern striped
+wing pattern multi-colored
