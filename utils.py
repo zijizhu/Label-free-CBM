@@ -6,6 +6,7 @@ import data_utils
 
 from tqdm import tqdm
 from torch.utils.data import DataLoader
+from operator import attrgetter
 
 PM_SUFFIX = {"max":"_max", "avg":""}
 
@@ -30,7 +31,8 @@ def save_target_activations(target_model, dataset, save_name, target_layers = ["
     #     command = "target_model.{}.register_forward_hook(get_activation(all_features[target_layer], pool_mode))".format(target_layer)
     #     hooks[target_layer] = eval(command)
     for target_layer in target_layers:
-        layer = getattr(target_model, target_layer)
+        # layer = getattr(target_model, target_layer)
+        layer = attrgetter(target_layer)(target_model)
         hooks[target_layer] = layer.register_forward_hook(get_activation(all_features[target_layer], pool_mode))
   
     with torch.no_grad():
