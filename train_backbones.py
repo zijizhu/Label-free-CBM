@@ -20,8 +20,8 @@ from torchvision.models import (
     ResNet34_Weights,
     resnet50,
     ResNet50_Weights,
-    vgg19,
-    VGG19_Weights,
+    vgg19_bn,
+    VGG19_BN_Weights,
 )
 from tqdm import tqdm
 
@@ -60,7 +60,7 @@ class CNNClassifier(nn.Module):
             backbone = resnet50(weights=ResNet50_Weights.DEFAULT)
             return nn.Sequential(*list(backbone.children())[:-1]), backbone.fc.in_features
         elif name == "vgg19":
-            backbone = vgg19(weights=VGG19_Weights.DEFAULT)
+            backbone = vgg19_bn(weights=VGG19_BN_Weights.DEFAULT)
             return nn.Sequential(
                 backbone.features,
                 nn.AdaptiveAvgPool2d((7, 7)),

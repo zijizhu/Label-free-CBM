@@ -10,3 +10,4 @@ data/places365.zip
 saved_models/
 .venv/
 venv/
+checkpoints/
