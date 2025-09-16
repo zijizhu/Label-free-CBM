@@ -73,6 +73,17 @@ class CNNClassifier(nn.Module):
         features = torch.flatten(features, 1)
         logits = self.classifier(features)
         return logits
+    
+    def predict(self, x):
+        features = self.features(x)
+        features = torch.flatten(features, 1)
+        if len(self.classifier) == 2:
+            concept_logits = self.classifier[0](features)
+            logits = self.classifier[1](concept_logits)
+        else:
+            concept_logits = None
+            logits = self.classifier(features)
+        return logits, concept_logits
 
 
 def train(

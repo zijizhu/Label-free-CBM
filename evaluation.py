@@ -14,6 +14,8 @@ from torch import nn
 from torch.utils.data import DataLoader
 from torchvision import transforms
 from tqdm import tqdm
+import torch.nn.functional as F
+from torchmetrics.classification import BinaryAccuracy
 
 from eval.concept_trustworthiness import Cub2011Eval, evaluate_concept_trustworthiness
 from eval.local_parts import id_to_attributes
@@ -58,12 +60,16 @@ def eval_accuracy(model: nn.Module, dataloader: DataLoader, logger: Logger, devi
     model.eval()
     correct = 0
     total = 0
+    concept_acc = BinaryAccuracy(multidim_average='global')
 
     for i, batch in enumerate(tqdm(dataloader)):
         batch = tuple(item.to(device) for item in batch)
-        images, labels = batch[:2]
+        images, labels, img_ids = batch
+        attrs = torch.tensor([id_to_attributes[im_id] for im_id in img_ids.tolist()], dtype=torch.long, device=device)
 
-        output = model(images)
+        output, cpt_output = model.predict(images)
+
+        concept_acc(F.sigmoid(cpt_output), attrs)
 
         predicted = torch.argmax(output, dim=-1)
         correct += (predicted == labels).sum().item()
@@ -71,6 +77,7 @@ def eval_accuracy(model: nn.Module, dataloader: DataLoader, logger: Logger, devi
 
     acc = correct / total
     logger.info(f"Accuracy: {acc:.4f}")
+    logger.info(f"Concept Accuracy: {concept_acc.compute():.4f}")
 
     return acc
 
@@ -223,20 +230,20 @@ if __name__ == '__main__':
             data_dir=args.data_dir,
             device=device
         )
-    else:
-        cams = torch.load(Path(args.log_dir) / "cams.pth")
-        all_cams_pt = cams["all_cams_pt"].to(device)
-        all_attributes_pt = cams['all_attributes_pt'].to(device)
 
-        n_attr = all_attributes_pt.size(1)
-        all_activation_maps = []  # all_activation_maps[i] : (n_select_samples, fea_h, fea_w) for the i-th attribute
+    cams = torch.load(Path(args.log_dir) / "cams.pth")
+    all_cams_pt = cams["all_cams_pt"].to(device)
+    all_attributes_pt = cams['all_attributes_pt'].to(device)
 
-        for i in tqdm(range(n_attr)):
-            attr_labels = all_attributes_pt[:, i]
-            selected_img_indices = torch.nonzero(attr_labels == 1).squeeze()  # Select all the test images containing this attribute
-            selected_cams = all_cams_pt[selected_img_indices][:, i]  # (n_select_samples, fea_h, fea_w)
+    n_attr = all_attributes_pt.size(1)
+    all_activation_maps = []  # all_activation_maps[i] : (n_select_samples, fea_h, fea_w) for the i-th attribute
 
-            all_activation_maps.append(selected_cams)
+    for i in tqdm(range(n_attr)):
+        attr_labels = all_attributes_pt[:, i]
+        selected_img_indices = torch.nonzero(attr_labels == 1).squeeze()  # Select all the test images containing this attribute
+        selected_cams = all_cams_pt[selected_img_indices][:, i]  # (n_select_samples, fea_h, fea_w)
 
-        mean_loc_acc, _ = evaluate_concept_trustworthiness(all_activation_maps=all_activation_maps, all_img_ids=cams['all_img_ids_pt'])
-        logger.info(f"Concept trustworthiness score: {mean_loc_acc:.2f}%")
+        all_activation_maps.append(selected_cams)
+
+    mean_loc_acc, _ = evaluate_concept_trustworthiness(all_activation_maps=all_activation_maps, all_img_ids=cams['all_img_ids_pt'])
+    logger.info(f"Concept trustworthiness score: {mean_loc_acc:.2f}%")

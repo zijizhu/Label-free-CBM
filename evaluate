@@ -1,0 +1,30 @@
+#!/bin/bash
+
+export data_dir="/workspace/datasets"
+
+allbackbones=(
+    "resnet34"
+    "resnet18"
+    "resnet50"
+    "densenet121"
+    "densenet161"
+    "vgg19"
+)
+
+logdirs=(
+    "cub_cbm_2025_09_13_15_59"
+    "cub_cbm_2025_09_13_16_19"
+    "cub_cbm_2025_09_13_16_39"
+    "cub_cbm_2025_09_13_17_02"
+    ""
+    ""
+)
+
+for i in ${!allbackbones[@]}; do
+    python evaluation.py \
+        --data-dir "$data_dir" \
+        --log-dir "saved_models/${logdirs[i]}" \
+        --backbone "${allbackbones[i]}" \
+        --compute-cams \
+        --ckpt-path "./checkpoints/${allbackbones[i]}_cub.pth"
+done
