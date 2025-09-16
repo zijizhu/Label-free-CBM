@@ -6,9 +6,17 @@ allbackbones=(
     "densenet161"
     "vgg19"
 )
+batchsizes=(
+    "64"
+    "128"
+)
 
-for backbone in ${allbackbones[@]}; do
-  python train_backbones.py --backbone $backbone --name $backbone --data-dir $dataset_root
+for i in ${!allbackbones[@]}; do
+  python train_backbones.py \
+    --backbone ${allbackbones[i]} \
+    --name ${allbackbones[i]}\
+     --data-dir $dataset_root \
+     --batch-size ${batchsizes[i]}
 done
 
 allbackbones=(
