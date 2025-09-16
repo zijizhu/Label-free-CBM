@@ -60,7 +60,7 @@ def eval_accuracy(model: nn.Module, dataloader: DataLoader, logger: Logger, devi
     model.eval()
     correct = 0
     total = 0
-    concept_acc = BinaryAccuracy(multidim_average='global')
+    concept_acc = BinaryAccuracy(multidim_average='global').to(device=device)
 
     for i, batch in enumerate(tqdm(dataloader)):
         batch = tuple(item.to(device) for item in batch)
