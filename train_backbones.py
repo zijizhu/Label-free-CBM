@@ -65,7 +65,7 @@ class CNNClassifier(nn.Module):
                 backbone.features,
                 nn.AdaptiveAvgPool2d((7, 7)),
                 nn.Flatten(start_dim=1),
-                *list(backbone.classifier.children())[:-1]
+                *list(backbone.classifier.children())[:3]
             ), backbone.classifier[-1].in_features
 
     def forward(self, x):

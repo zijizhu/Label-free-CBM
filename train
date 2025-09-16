@@ -12,10 +12,7 @@ for backbone in ${allbackbones[@]}; do
 done
 
 allbackbones=(
-    "resnet34"
-    "resnet18"
-    "resnet50"
-    "densenet121"
+    "densenet161"
     "vgg19"
 )
 
@@ -29,10 +26,3 @@ for backbone in ${allbackbones[@]}; do
         --n_iters 50 \
         --proj_steps 1
 done
-
-data_dir=/workspace/datasets python evaluation.py \
-    --data-dir /workspace/datasets \
-    --log-dir saved_models/cub_cbm_2025_09_13_15_59 \
-    --backbone resnet34 \
-    --compute-cams \
-    --ckpt-path ./checkpoints/resnet34_cub.pth
