@@ -15,8 +15,8 @@ for i in ${!allbackbones[@]}; do
   python train_backbones.py \
     --backbone ${allbackbones[i]} \
     --name ${allbackbones[i]}\
-     --data-dir $dataset_root \
-     --batch-size ${batchsizes[i]}
+    --data-dir $dataset_root \
+    --batch-size ${batchsizes[i]}
 done
 
 allbackbones=(
